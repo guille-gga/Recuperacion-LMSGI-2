@@ -1,5 +1,7 @@
 # Recuperacion-LMSGI-2
 
+_PROBADO Y FUNCIONA. SE ALMACENA EN LAS TABLAS DE .../mensajes.html and .../index.html_
+
 node_modules eliminado para poder subir al Repo.
 
 Desacrgar:
