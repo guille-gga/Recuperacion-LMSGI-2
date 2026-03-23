@@ -1,0 +1,80 @@
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="https://unpkg.com/@knadh/oat/oat.min.css">
+  <script src="https://unpkg.com/@knadh/oat/oat.min.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <div class="container">
+    <form id="miFormulario">
+      <input type="text" id="campoUsuario" placeholder="Tu nombre" required>
+      <input type="text" id="campoContenido" placeholder="Mensaje..." required>
+      <input type="password" id="campoPass" placeholder="Contraseña" required>
+      <button type="submit">Enviar</button>
+    </form>
+    <hr>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Usuario</th>
+          <th>Texto</th>
+        </tr>
+      </thead>
+      <tbody id="cuerpoDeTabla"></tbody>
+    </table>
+
+    <script>
+      function cargarDatos() {
+        fetch('/mensajes')
+          .then(res => res.json())
+          .then(datos => {
+            const tabla = document.getElementById('cuerpoDeTabla');
+            datos.forEach(m => {
+              tabla.innerHTML += `<tr><td>${m.id}</td><td>${m.user}</td><td>${m.content}</td></tr>`;
+            });
+          }).catch(err => console.error('Error cargando:', err));
+      }
+
+      const form = document.getElementById('miFormulario');
+      form.onsubmit = function (event) {
+        event.preventDefault();
+
+        const objetoEnviar = {
+          usuario: document.getElementById('campoUsuario').value,
+          contenido: document.getElementById('campoContenido').value,
+          pass: document.getElementById('campoPass').value
+        };
+
+        fetch('/mensajes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(objetoEnviar)
+        })
+          .then(res => {
+            if (!res.ok) throw new Error('Error en el servidor: ' + res.status);
+            return res.json();
+          })
+          .then(resultado => {
+            if (resultado.status === 'ok') {
+              cargarDatos();
+              form.reset();
+            } else {
+              alert('Error: ' + (resultado.status || 'Desconocido'));
+            }
+          })
+          .catch(err => alert('Fallo de petición: ' + err.message));
+      };
+
+      cargarDatos();
+    </script>
+  </div>
+
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/@knadh/oat/oat.min.css">
+    <script src="https://unpkg.com/@knadh/oat/oat.min.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <main class="container">
+        <section>
+            <h2>Enviar Mensaje</h2>
+            <form action="/mensajes" method="POST">
+                <input type="text" name="usuario" placeholder="Tu usuario" required>
+                <input type="text" name="contenido" placeholder="Escribe algo..." required>
+                <input type="password" name="pass" placeholder="Contraseña" required>
+                <button type="submit">Enviar</button>
+            </form>
+        </section>
+        <hr>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Usuario</th>
+                    <th>Contenido</th>
+                </tr>
+            </thead>
+            <tbody id="lista"></tbody>
+        </table>
+
+        <script>
+            fetch('/mensajes')
+                .then(res => res.json())
+                .then(data => {
+                    const lista = document.getElementById('lista');
+                    data.forEach(m => {
+                        lista.innerHTML += `<tr><td>${m.id}</td><td>${m.user}</td><td>${m.content}</td></tr>`;
+                    });
+                });
+        </script>
+
+    </main>
+
+
+</body>
+
+</html>
